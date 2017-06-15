@@ -16,7 +16,7 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-
+summary(mtcars)
 ```
 
 Column {data-width=350}
