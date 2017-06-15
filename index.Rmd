@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Index IBM"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -8,17 +8,15 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-library(shiny)
 ```
 
-inputs {.sidebar}
+Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
 
 ```{r}
-fileInput("fId","Plese select file to load")
-actionButton("submit", "Submit")
+
 ```
 
 Column {data-width=350}
@@ -27,14 +25,7 @@ Column {data-width=350}
 ### Chart B
 
 ```{r}
-  observeEvent(input$do, {
-    DT::renderDataTable({
-      inFile <- input$csv1
-      if (is.null(inFile))
-          return(NULL)
-      read.csv(inFile$fId)
-    })
-})
+
 ```
 
 ### Chart C
