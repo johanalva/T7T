@@ -4,8 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    
-    #runtime: shiny
+    runtime: shiny
 ---
 
 ```{r global, include=FALSE}
@@ -18,7 +17,7 @@ Column {.sidebar}
 ### Chart A
 
 ```{r}
-
+summary(mtcars)
 ```
 
 Column {data-width=350}
