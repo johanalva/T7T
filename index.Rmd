@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +17,7 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-summary(mtcars)
+fileInput("id", "Please select your file")
 ```
 
 Column {data-width=350}
