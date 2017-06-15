@@ -1,0 +1,45 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+```
+
+inputs {.sidebar}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+fileInput("fId","Plese select file to load")
+actionButton("submit", "Submit")
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+  observeEvent(input$do, {
+    DT::renderDataTable({
+      inFile <- input$csv1
+      if (is.null(inFile))
+          return(NULL)
+      read.csv(inFile$fId)
+    })
+})
+```
+
+### Chart C
+
+```{r}
+
+```
+
