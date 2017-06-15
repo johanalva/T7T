@@ -7,11 +7,11 @@ output:
     runtime: shiny
 ---
 
-```{r setup, include=FALSE}
+```{r global, include=FALSE}
 library(flexdashboard)
 ```
 
-Column {data-width=650}
+Column {.sidebar}
 -----------------------------------------------------------------------
 
 ### Chart A
