@@ -1,5 +1,5 @@
 ---
-title: "Index IBM"
+title: "IBM PMO Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
