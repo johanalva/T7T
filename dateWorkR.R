@@ -116,3 +116,8 @@ df2$daysInProgress <- as.numeric(
     as.duration(interval(df2$TTIM.Approve.Date., Sys.Date())), "days")
 
 write.csv(df2, "testFin.csv")
+
+
+
+install.packages("flexdashboard", type = "source")
+library(flexdashboard)
