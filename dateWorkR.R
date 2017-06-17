@@ -8,7 +8,7 @@ df <- read.csv("F_Form1-106.csv")
 
 df1 <- filter(df, ID != "")
 
-# Clean Data --------------------------------------------------------------
+# Clean Data & Functions ---------------------------------------------------
 
 ## Selection of IMT Canada or US
 df1<- subset(df, IMT. == "US" | IMT. == "Canada")
@@ -29,7 +29,7 @@ for(i in 1:nrow(df1)){
 
 # Dates -------------------------------------------------------------------
 
-
+# Creation of new data frame
 df2 <- df1
 
 dateFix <- function(d1){
@@ -37,13 +37,13 @@ dateFix <- function(d1){
     return(d2)
 }
 
-
+# Clean dates
 df2$Creation.Timestamp <- dateFix(df2$Creation.Timestamp)
 df2$Last.Updated.Timestamp <- dateFix(df2$Last.Updated.Timestamp)
 df2$Server.Time. <- dateFix(df2$Server.Time.)
 df2$TTIM.Approve.Date. <- dateFix(df2$TTIM.Approve.Date.)
 df2$DPE.Approve.Date. <- dateFix(df2$DPE.Approve.Date.)
-
+df2$PCR.Final.Approval.Date <- dateFix(df2$PCR.Final.Approval.Date)
 df2$Budget.End.Date. <- strptime(df2$Budget.End.Date., format = "%Y-%m-%d")
 df2$Budget.Start.Date. <- strptime(df2$Budget.Start.Date., format = "%Y-%m-%d")
 
@@ -63,22 +63,7 @@ df2$Next.Approval.Date <- as.Date(df2$Next.Approval.Date)
 df2$Server.Time. <- as.Date(df2$Server.Time.)
 df2$TTIM.Approve.Date. <- as.Date(df2$TTIM.Approve.Date.)
 df2$DPE.Backup. <- as.Date(df2$DPE.Approve.Date.)
-
- #df3 <- df2
- #df3$PE.Approve.Date. <- as.character(df3$PE.Approve.Date.)
-# 
-# for(i in 1:nrow(df3)){
-#     span <- dateFix(df3$PE.Approve.Date.[i])
-#     if(!is.na(span)){
-#         span <- as.character.Date(span)
-#     }else{
-#         df3$PE.Approve.Date.[i] <- df3$PE.Approve.Date.[i]
-#     }
-# }
-
-
-#dfT <- tryCatch({month(df3$PE.Approve.Date.)}, finally = {""})
-
+df2$PCR.Final.Approval.Date <- as.Date(df2$PCR.Final.Approval.Date)
 
 # Month Creation -----------------------------------------------------------
 
@@ -96,6 +81,9 @@ df2$monthNext.Approval.Date <- month(df2$Next.Approval.Date)
 df2$monthServer.Time. <- month(df2$Server.Time.)
 df2$monthTTIM.Approve.Date. <- month(df2$TTIM.Approve.Date.)
 df2$monthDPE.Backup. <- month(df2$DPE.Approve.Date.)
+df2$monthPCR.Final.Approval.Date <- month(df2$PCR.Final.Approval.Date)
+
+# Year Creation -----------------------------------------------------------
 
 df2$yearCreation.Timestamp <- year(df2$Creation.Timestamp)
 df2$yearLast.Updated.Timestamp <- year(df2$Last.Updated.Timestamp)
@@ -111,13 +99,63 @@ df2$yearNext.Approval.Date <- year(df2$Next.Approval.Date)
 df2$yearServer.Time. <- year(df2$Server.Time.)
 df2$yearTTIM.Approve.Date. <- year(df2$TTIM.Approve.Date.)
 df2$yearDPE.Backup. <- year(df2$DPE.Approve.Date.)
+df2$yearPCR.Final.Approval.Date <- year(df2$PCR.Final.Approval.Date)
 
+# Adding column Days in progress
 df2$daysInProgress <- as.numeric(
     as.duration(interval(df2$TTIM.Approve.Date., Sys.Date())), "days")
 
-write.csv(df2, "testFin.csv")
+# Adding column PCR over than 10
+df2$pcrOver10 <- NA
+
+for(i in 1:nrow(df2)){
+    if(!is.na(df2$daysInProgress)[i] & df2$daysInProgress[i] > 10){
+        df2$pcrOver10[i] <- TRUE
+    }else if(!is.na(df2$daysInProgress)[i] & df2$daysInProgress[i] <= 10){
+        df2$pcrOver10[i] <- FALSE
+    }else{
+        df2$pcrOver10[i] <- NA
+    }
+}
+
+# Adding Column of Days since PCR was Created
+
+df2$pcrCreatedDays <- NA
+
+for(i in 1:nrow(df2)){
+    if(!is.na(df2$PCR.Final.Approval.Date)[i]){
+        df2$pcrCreatedDays[i] <- as.numeric(
+            as.duration(interval(
+                df2$PCR.Final.Approval.Date[i], Sys.Date())), "days")
+    }else{
+        df2$pcrCreatedDays[i] <- as.numeric(
+            as.duration(interval(
+                df2$Last.Updated.Timestamp[i], Sys.Date())), "days")
+    }
+}
 
 
 
-install.packages("flexdashboard", type = "source")
-library(flexdashboard)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
